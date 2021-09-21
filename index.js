@@ -1,54 +1,58 @@
-let person = {
-    'first-name': 'Marek',
-    lastName: 'Matczak',
-    age: 42,
-    likesJavaScript: true,
-    dateOfBirth: new Date('1979-01-25'),
+let myNumbers = [1, 3, 5, 6, 15];
+const myThings = [1, true, 'Marek', {name: 'John'}, 77, [747.66, false]];
 
-    sayHello() {
-        return `Hello, I am ${this['first-name']}`;
+const sum1 = myNumbers
+    .map(calibrateDeviceWith(1))
+    .map(calibrateDeviceWith(2))
+    .filter(onlyGreaterThanFive)
+    .reduce(calculateSum, 0);
+
+let sum2 = 0;
+for (let i = 0; i < myNumbers.length; i++) {
+    const currentNumber = myNumbers[i] + 1; // calibrate device
+    const onlyGreaterThanFive = currentNumber > 5;
+    if (onlyGreaterThanFive) {
+        sum2 += currentNumber;
     }
-};
+}
 
-// function Person(firstName, lastName, age) {
-//     this.firstName = firstName;
-//     this.lastName = lastName;
-//     this.age = age;
-// }
+(function (scope) {
+    const a = 5;
+    console.log(scope.document);
+})(window);
 
-// class Person {
-//     constructor(firstName, lastName, age) {
-//         this.firstName = firstName;
-//         this.lastName = lastName;
-//         this.age = age;
-//     }
-// }
+assertObjectLike(undefined).isNotEmpty();
 
-// const marek = new Person('Marek', 'Matczak', 42);
+function assertObjectLike(testObject) {
+    return {
+        isNotEmpty() {
+            return testObject != null;
+        },
 
+        isNotStringOfMarek() {
+            return testObject !== 'Marek';
+        }
+    }
+}
 
-const prop = 'first-name';
-person.address = {
-    zipCode: '53-601',
-    street: 'Teczowa',
-    streetNumber: 0
-};
+function calculateSum(sum, currentValue) {
+    return sum + currentValue;
+}
 
-delete person.dateOfBirth;
+function calibrateDeviceWith(param) {
+    return function (value) {
+        return value + param;
+    }
+}
 
-// false, undefined, null, 0, '', NaN
+function calibrateDevice(value) {
+    return value + 1;
+}
 
-// if (person['address']) {
-//     console.log(person['address'].streetNumber ?? '');
-// }
-// console.log(person);
-const add = (a, b) => a + b;
+function onlyGreaterThanFive(value) {
+    return value > 5;
+}
 
-console.log(person.sayHello());
+console.log(sum1);
+console.log(sum2);
 
-
-
-// function add(a, b) { // function declaration
-//     let abc = 'dljl';
-//     return a + b;
-// }
