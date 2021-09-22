@@ -1,58 +1,46 @@
-let myNumbers = [1, 3, 5, 6, 15];
-const myThings = [1, true, 'Marek', {name: 'John'}, 77, [747.66, false]];
-
-const sum1 = myNumbers
-    .map(calibrateDeviceWith(1))
-    .map(calibrateDeviceWith(2))
-    .filter(onlyGreaterThanFive)
-    .reduce(calculateSum, 0);
-
-let sum2 = 0;
-for (let i = 0; i < myNumbers.length; i++) {
-    const currentNumber = myNumbers[i] + 1; // calibrate device
-    const onlyGreaterThanFive = currentNumber > 5;
-    if (onlyGreaterThanFive) {
-        sum2 += currentNumber;
+class Employee {
+    constructor(id, firstName, lastName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 }
 
-(function (scope) {
-    const a = 5;
-    console.log(scope.document);
-})(window);
+class EmployeeService {
+    async getOne(id) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                // reject(new Error('Server not available'));
+                resolve(new Employee(id, 'John', 'Smith'));
+            }, 2000);
+        })
+        // return fetch(`employees/${id}`).then(response => response.json());
+    }
+}
 
-assertObjectLike(undefined).isNotEmpty();
-
-function assertObjectLike(testObject) {
-    return {
-        isNotEmpty() {
-            return testObject != null;
-        },
-
-        isNotStringOfMarek() {
-            return testObject !== 'Marek';
+class EmployeeController {
+    constructor(employeeId, employees) {
+        this.employeeId = employeeId;
+        this.employees = employees;
+        this.firstNameElement = document.getElementById('firstName');
+        this.lastNameElement = document.getElementById('lastName');
+        if (!this.firstNameElement || !this.lastNameElement) {
+            throw new Error('Wrong template!!');
         }
     }
-}
 
-function calculateSum(sum, currentValue) {
-    return sum + currentValue;
-}
-
-function calibrateDeviceWith(param) {
-    return function (value) {
-        return value + param;
+    async start() {
+        try {
+            const employee = await this.employees.getOne(this.employeeId);
+            this.firstNameElement.value = employee.firstName;
+            this.lastNameElement.value = employee.lastName;
+        } catch (err) {
+            console.error(err);
+        }
+        console.log('Starting controller finished');
     }
 }
 
-function calibrateDevice(value) {
-    return value + 1;
-}
+const employees = new EmployeeService();
 
-function onlyGreaterThanFive(value) {
-    return value > 5;
-}
-
-console.log(sum1);
-console.log(sum2);
-
+new EmployeeController(1234, employees).start();
